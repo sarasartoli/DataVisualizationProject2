@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+</head>
+
+
+
 <style>
 
 svg {
@@ -34,12 +45,53 @@ svg {
   cursor: move;
 }
 
+.form-group{
+float:right;
+width:100px;
+margin-right:100px;
+}
+
 </style>
 <body>
+
+
+<form>
+    <div class="form-group">
+      <label for="selectParam">Select Parameter:</label>
+      <select class="form-control" id="selectParam" onchange="setSelect(this.value)">
+        <option value="Base Tickness (in. )">Base Tickness (in. )</option>
+		<option value="Modulus of Base Layer(ksi)">Modulus of Base Layer(ksi)</option>
+		<option value="Composite K(psi/in)">Composite K(psi/in)</option>
+        
+        
+        <option value="Subgrade K-Value (psi/in.)">Subgrade K-Value (psi/in.)</option>
+      </select>
+	</div>
+</form>
+
+
+
+
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
-var color = d3.scale.category10();
+
+var catName = document.getElementById("selectParam").value;
+function setSelect(sv){
+catName=sv;
+drawGraph();
+
+}
+
+
+
+
+//var catName="Composite K(psi/in)";
+
+//var color = d3.scale.category10();
+
+
 var margin = {top: 30, right: 10, bottom: 10, left: 10},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -58,8 +110,14 @@ var svg = d3.select("body").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+var color;
+
+drawGraph();
+function drawGraph(){
 
 d3.csv("KTable.csv", function(error, cars) {
+
 
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
@@ -76,6 +134,19 @@ d3.csv("KTable.csv", function(error, cars) {
     .enter().append("path")
       .attr("d", path);
 
+	  
+var temp=[];
+
+cars.forEach(function(d){
+temp.push(d[catName]);
+ 
+
+});	 
+
+
+color=d3.scale.linear().domain([d3.min(temp),d3.max(temp)]).range(["#0000FF","#FF0000"]);	  
+		  
+	  
   // Add blue foreground lines for focus.
   foreground = svg.append("g")
       .attr("class", "foreground")
@@ -85,7 +156,7 @@ d3.csv("KTable.csv", function(error, cars) {
       .attr("d", path)
       .attr("stroke",function(d)
         {
-          return color(d["Composite K(psi/in)"]); 
+          return color(d[catName]); 
         });
 
   // Add a group element for each dimension.
@@ -139,6 +210,10 @@ d3.csv("KTable.csv", function(error, cars) {
       .attr("width", 16);
 });
 
+
+
+}
+
 function position(d) {
   var v = dragging[d];
   return v == null ? x(d) : v;
@@ -169,3 +244,5 @@ function brush() {
 }
 
 </script>
+
+</body>
