@@ -14,7 +14,6 @@ svg {
 
 .foreground path {
   fill: none;
-  stroke: steelblue;
 }
 
 .brush .extent {
@@ -40,6 +39,7 @@ svg {
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
+var color = d3.scale.category10();
 var margin = {top: 30, right: 10, bottom: 10, left: 10},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -82,7 +82,11 @@ d3.csv("KTable.csv", function(error, cars) {
     .selectAll("path")
       .data(cars)
     .enter().append("path")
-      .attr("d", path);
+      .attr("d", path)
+      .attr("stroke",function(d)
+        {
+          return color(d["Composite K(psi/in)"]); 
+        });
 
   // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
