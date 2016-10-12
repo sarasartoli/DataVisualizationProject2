@@ -1,4 +1,4 @@
-name,Subgrade K-Value (psi/in.),Base Tickness (in. ),Modulus of Base Layer(ksi),Composite K(psi/in)
+name,Subgrade K-Value (psi/in.),Base Tickness (in. ),Modulus of Base Layer(psi),Composite K(psi/in)
 1,25,2,50,56 
 2,25,2,60,57 
 3,25,2,70,59 
